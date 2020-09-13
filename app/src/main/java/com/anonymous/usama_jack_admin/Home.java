@@ -13,6 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import dmax.dialog.SpotsDialog;
+
 public class Home extends AppCompatActivity {
     private TextView noOfusers;
 
@@ -22,6 +24,9 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         noOfusers = findViewById(R.id.noOfUsers);
 
+        final android.app.AlertDialog waitingDialog = new SpotsDialog.Builder().setContext(Home.this).build();
+        waitingDialog.show();
+
         DatabaseReference userNode = FirebaseDatabase.getInstance().getReference("User's Database");
 
         userNode.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -29,6 +34,7 @@ public class Home extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 long size = snapshot.getChildrenCount();
                 noOfusers.setText(String.valueOf(size));
+                waitingDialog.dismiss();
             }
 
             @Override
